@@ -57,17 +57,19 @@ export const getTaskById = async (req, res) => {
 // Create new task
 export const createTask = async (req, res) => {
   try {
-    const { text, priority } = req.body
+    const { text, priority, tags } = req.body
 
     if (!text || !text.trim()) {
       return res.status(400).json({ error: 'Task text is required' })
     }
+    const taskTags = Array.isArray(tags) ? tags : [];
 
     const newTask = {
       id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
       text: text.trim(),
       priority: priority || 2,
       completed: false,
+      tags: taskTags,
       createdAt: new Date().toISOString(),
     }
 
@@ -86,7 +88,7 @@ export const createTask = async (req, res) => {
 export const updateTask = async (req, res) => {
   try {
     const { id } = req.params
-    const { text, priority, completed } = req.body
+    const { text, priority, completed, tags } = req.body
 
     const db = await readDatabase()
     const taskIndex = db.tasks.findIndex((task) => task.id === id)
@@ -100,7 +102,9 @@ export const updateTask = async (req, res) => {
     if (priority !== undefined) db.tasks[taskIndex].priority = priority
     if (completed !== undefined) db.tasks[taskIndex].completed = completed
 
-    db.tasks[taskIndex].updatedAt = new Date().toISOString()
+    if (tags !== undefined) db.tasks[taskIndex].tags = Array.isArray(tags) ? tags : [];
+
+    db.tasks[taskIndex].updatedAt = new Date().toISOString();
 
     await writeDatabase(db)
     res.json(db.tasks[taskIndex])
