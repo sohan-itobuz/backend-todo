@@ -1,3 +1,28 @@
 {
-  "tasks": []
+  "tasks": [
+    {
+      "id": "1759813723473vkb10",
+      "text": "task 1",
+      "priority": 1,
+      "completed": false,
+      "createdAt": "2025-10-07T05:08:43.473Z",
+      "updatedAt": "2025-10-07T06:15:11.126Z"
+    },
+    {
+      "id": "1759813730045cgxz7",
+      "text": "task 1",
+      "priority": 2,
+      "completed": false,
+      "createdAt": "2025-10-07T05:08:50.045Z",
+      "updatedAt": "2025-10-07T06:18:41.372Z"
+    },
+    {
+      "id": "1759813737106f8j1r",
+      "text": "task 3",
+      "priority": 3,
+      "completed": false,
+      "createdAt": "2025-10-07T05:08:57.106Z",
+      "updatedAt": "2025-10-07T06:16:41.004Z"
+    }
+  ]
 }

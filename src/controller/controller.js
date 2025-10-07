@@ -6,13 +6,12 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const dbPath = path.join(__dirname, '../../database/db.json')
 
-// Helper function to read from database
+// function to read from database
 const readDatabase = async () => {
   try {
     const data = await fs.readFile(dbPath, 'utf8')
     return JSON.parse(data)
   } catch (error) {
-    // If file doesn't exist, create with empty array
     if (error.code === 'ENOENT') {
       await writeDatabase({ tasks: [] })
       return { tasks: [] }
@@ -21,7 +20,7 @@ const readDatabase = async () => {
   }
 }
 
-// Helper function to write to database
+// function to write to database
 const writeDatabase = async (data) => {
   await fs.writeFile(dbPath, JSON.stringify(data, null, 2))
 }
