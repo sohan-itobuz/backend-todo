@@ -28,8 +28,31 @@ const writeDatabase = async (data) => {
 // Get all tasks
 export const getAllTasks = async (req, res) => {
   try {
+    const { search, category } = req.query
     const db = await readDatabase()
-    res.json(db.tasks)
+    let filteredTasks = db.tasks
+
+    if (search && category) {
+      const searchTerm = search.toLowerCase().trim()
+
+      filteredTasks = db.tasks.filter(task => {
+        switch (category) {
+          case 'name':
+            return task.text.toLowerCase().includes(searchTerm)
+          case 'priority':
+            {
+              const searchPriority = parseInt(searchTerm);
+              return !isNaN(searchPriority) && task.priority === searchPriority
+            }
+          case 'tags':
+            return task.tags && Array.isArray(task.tags) && task.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+          default:
+            return true
+        }
+      })
+    }
+
+    res.json(filteredTasks)
   } catch (error) {
     console.error('Error reading database:', error)
     res.status(500).json({ error: 'Failed to fetch tasks' })

@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
   res.json({
     message: 'To-Do List API Server is running!',
     endpoints: {
-      getAllTasks: 'GET /api/todos',
+      getAllTasks: 'GET /api/todos?search={term}&category={name|priority|tags}',
       createTask: 'POST /api/todos',
       updateTask: 'PUT /api/todos/:id',
       deleteTask: 'DELETE /api/todos/:id',
