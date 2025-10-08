@@ -27,6 +27,7 @@ import todo from '../models/todo.js'
 // }
 
 // Get all tasks
+
 export const getAllTasks = async (req, res) => {
   try {
     const { search, category } = req.query
@@ -60,11 +61,11 @@ export const getAllTasks = async (req, res) => {
           break;
 
         default:
-          break;
+          return true;
       }
       // })
     }
-    const tasks = await todo.find(query).sort({ createdAt: -1 }) // Sort by newest first
+    const tasks = await todo.find(query).sort({ createdAt: -1 }) // newest first sorting logic
     res.json(tasks)
   } catch (error) {
     console.error('Error reading database:', error)

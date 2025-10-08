@@ -56,7 +56,8 @@ app.use((req, res) => {
 })
 
 // Error handling middleware
-app.use((err, req, res, /* next */) => {
+//eslint-disable-next-line
+app.use((err, req, res, next) => {
   console.error('Server error:', err)
   res.status(500).json({
     error: 'Internal server error',
