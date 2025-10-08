@@ -7,6 +7,7 @@ import {
   deleteTask,
   deleteAllTasks,
 } from '../controller/controller.js'
+// import todo from '../models/todo.js'
 
 import { validateCreateTodo, validateUpdateTodo } from '../validation/validate.js'
 
