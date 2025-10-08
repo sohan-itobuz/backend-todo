@@ -8,6 +8,8 @@ import {
   deleteAllTasks,
 } from '../controller/controller.js'
 
+import { validateCreateTodo, validateUpdateTodo } from '../validation/validate.js'
+
 const router = express.Router()
 
 // GET all tasks
@@ -17,10 +19,10 @@ router.get('/', getAllTasks)
 router.get('/:id', getTaskById)
 
 // CREATE new task
-router.post('/', createTask)
+router.post('/', validateCreateTodo, createTask)
 
 // UPDATE task
-router.put('/:id', updateTask)
+router.put('/:id', validateUpdateTodo, updateTask)
 
 // DELETE task
 router.delete('/:id', deleteTask)

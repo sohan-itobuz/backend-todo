@@ -44,6 +44,17 @@
       ],
       "createdAt": "2025-10-07T09:18:34.783Z",
       "updatedAt": "2025-10-07T09:24:08.470Z"
+    },
+    {
+      "id": "1759899834026a5u0y",
+      "text": "new task",
+      "priority": 2,
+      "completed": false,
+      "tags": [
+        "newtag",
+        "tag2"
+      ],
+      "createdAt": "2025-10-08T05:03:54.026Z"
     }
   ]
 }
