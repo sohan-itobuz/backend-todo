@@ -6,13 +6,12 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const dbPath = path.join(__dirname, '../../database/db.json')
 
-// Helper function to read from database
+// function to read from database
 const readDatabase = async () => {
   try {
     const data = await fs.readFile(dbPath, 'utf8')
     return JSON.parse(data)
   } catch (error) {
-    // If file doesn't exist, create with empty array
     if (error.code === 'ENOENT') {
       await writeDatabase({ tasks: [] })
       return { tasks: [] }
@@ -21,7 +20,7 @@ const readDatabase = async () => {
   }
 }
 
-// Helper function to write to database
+// function to write to database
 const writeDatabase = async (data) => {
   await fs.writeFile(dbPath, JSON.stringify(data, null, 2))
 }
@@ -29,8 +28,31 @@ const writeDatabase = async (data) => {
 // Get all tasks
 export const getAllTasks = async (req, res) => {
   try {
+    const { search, category } = req.query
     const db = await readDatabase()
-    res.json(db.tasks)
+    let filteredTasks = db.tasks
+
+    if (search && category) {
+      const searchTerm = search.toLowerCase().trim()
+
+      filteredTasks = db.tasks.filter(task => {
+        switch (category) {
+          case 'name':
+            return task.text.toLowerCase().includes(searchTerm)
+          case 'priority':
+            {
+              const searchPriority = parseInt(searchTerm);
+              return !isNaN(searchPriority) && task.priority === searchPriority
+            }
+          case 'tags':
+            return task.tags && Array.isArray(task.tags) && task.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+          default:
+            return true
+        }
+      })
+    }
+
+    res.json(filteredTasks)
   } catch (error) {
     console.error('Error reading database:', error)
     res.status(500).json({ error: 'Failed to fetch tasks' })
@@ -58,17 +80,19 @@ export const getTaskById = async (req, res) => {
 // Create new task
 export const createTask = async (req, res) => {
   try {
-    const { text, priority } = req.body
+    const { text, priority, tags } = req.body
 
     if (!text || !text.trim()) {
       return res.status(400).json({ error: 'Task text is required' })
     }
+    const taskTags = Array.isArray(tags) ? tags : [];
 
     const newTask = {
       id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
       text: text.trim(),
       priority: priority || 2,
       completed: false,
+      tags: taskTags,
       createdAt: new Date().toISOString(),
     }
 
@@ -87,7 +111,7 @@ export const createTask = async (req, res) => {
 export const updateTask = async (req, res) => {
   try {
     const { id } = req.params
-    const { text, priority, completed } = req.body
+    const { text, priority, completed, tags } = req.body
 
     const db = await readDatabase()
     const taskIndex = db.tasks.findIndex((task) => task.id === id)
@@ -101,7 +125,9 @@ export const updateTask = async (req, res) => {
     if (priority !== undefined) db.tasks[taskIndex].priority = priority
     if (completed !== undefined) db.tasks[taskIndex].completed = completed
 
-    db.tasks[taskIndex].updatedAt = new Date().toISOString()
+    if (tags !== undefined) db.tasks[taskIndex].tags = Array.isArray(tags) ? tags : [];
+
+    db.tasks[taskIndex].updatedAt = new Date().toISOString();
 
     await writeDatabase(db)
     res.json(db.tasks[taskIndex])

@@ -1,3 +1,49 @@
 {
-  "tasks": []
+  "tasks": [
+    {
+      "id": "1759823695616o6tcj",
+      "text": "task 6",
+      "priority": 3,
+      "completed": false,
+      "tags": [
+        "for later"
+      ],
+      "createdAt": "2025-10-07T07:54:55.616Z",
+      "updatedAt": "2025-10-07T12:31:08.875Z"
+    },
+    {
+      "id": "17598280789443bpex",
+      "text": "learn middleware",
+      "priority": 3,
+      "completed": false,
+      "tags": [
+        "for study"
+      ],
+      "createdAt": "2025-10-07T09:07:58.944Z",
+      "updatedAt": "2025-10-07T09:43:41.831Z"
+    },
+    {
+      "id": "1759828551089noti7",
+      "text": "learn js",
+      "priority": 2,
+      "completed": false,
+      "tags": [
+        "for study",
+        "for later"
+      ],
+      "createdAt": "2025-10-07T09:15:51.089Z",
+      "updatedAt": "2025-10-07T09:43:46.852Z"
+    },
+    {
+      "id": "1759828714783bm9nz",
+      "text": "do math",
+      "priority": 1,
+      "completed": false,
+      "tags": [
+        "extra"
+      ],
+      "createdAt": "2025-10-07T09:18:34.783Z",
+      "updatedAt": "2025-10-07T09:24:08.470Z"
+    }
+  ]
 }

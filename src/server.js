@@ -17,11 +17,6 @@
 import express from 'express'
 import cors from 'cors'
 import todoRoutes from './routes/routes.js'
-import { fileURLToPath } from 'url'
-import { dirname, join } from 'path'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -38,7 +33,7 @@ app.get('/', (req, res) => {
   res.json({
     message: 'To-Do List API Server is running!',
     endpoints: {
-      getAllTasks: 'GET /api/todos',
+      getAllTasks: 'GET /api/todos?search={term}&category={name|priority|tags}',
       createTask: 'POST /api/todos',
       updateTask: 'PUT /api/todos/:id',
       deleteTask: 'DELETE /api/todos/:id',
@@ -52,7 +47,7 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'Server is running!' })
 })
 
-// Handle 404 for undefined routes - FIXED: Use proper route pattern
+// Handle 404 for undefined routes 
 app.use((req, res) => {
   res.status(404).json({
     error: 'Route not found',
@@ -72,7 +67,7 @@ app.use((req, res) => {
 })
 
 // Error handling middleware
-app.use((err, req, res, next) => {
+app.use((err, req, res, /* next */) => {
   console.error('Server error:', err)
   res.status(500).json({
     error: 'Internal server error',
