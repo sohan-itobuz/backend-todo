@@ -1,16 +1,15 @@
 import { createTodoSchema, updateTodoSchema } from '../schemas/schemas.js';
 import { ValidationError } from 'yup';
 
-const validate = (schema) => async (req, res, next) => {
+const validate = (schema) => async (req, res, next) => {  //higher order function
   try {
-    req.body = await schema.validate(req.body, {
+    await schema.validate(req.body, {
       abortEarly: false, //returns all errors
       stripUnknown: true, //remove keys not defined in schema
       strict: false,
       noUnknown: true, //reject values not defined in schema
     });
     next();
-
   } catch (error) {
     if (error instanceof ValidationError) {
       const errorMessages = error.errors;
@@ -18,7 +17,7 @@ const validate = (schema) => async (req, res, next) => {
       return res.status(400).json({
         status: 'Validation Error',
         errors: errorMessages,
-        details: error.inner.map(e => ({ path: e.path, message: e.message }))
+        details: error.inner.map((e) => ({ path: e.path, message: e.message })),
       });
     }
     next(error);

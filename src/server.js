@@ -2,56 +2,37 @@
 import express from 'express'
 import cors from 'cors'
 import router from './routes/routes.js'
-import connectDB from '../database/db.js'
+import connectDB from './database/db.js'
 
-//mongodb call
+
 connectDB();
 
 const app = express()
 const PORT = process.env.PORT || 3001
 
-// Middleware
+
 app.use(cors())
 app.use(express.json())
 
-// Routes
+
 app.use('/api/todos', router)
 
-// Root route to avoid 404
+
 app.get('/', (req, res) => {
   res.json({
-    message: 'To-Do List API Server is running!',
-    endpoints: {
-      getAllTasks: 'GET /api/todos?search={term}&category={name|priority|tags}',
-      createTask: 'POST /api/todos',
-      updateTask: 'PUT /api/todos/:id',
-      deleteTask: 'DELETE /api/todos/:id',
-      deleteAllTasks: 'DELETE /api/todos',
-    },
+    message: 'To-Do List API Server is running!'
   })
 })
 
-// Health check endpoint
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'Server is running!' })
 })
 
-// Handle 404 for undefined routes 
+
 app.use((req, res) => {
   res.status(404).json({
-    error: 'Route not found',
-    requestedUrl: req.originalUrl,
-    availableEndpoints: {
-      root: 'GET /',
-      health: 'GET /api/health',
-      todos: {
-        getAll: 'GET /api/todos',
-        create: 'POST /api/todos',
-        update: 'PUT /api/todos/:id',
-        delete: 'DELETE /api/todos/:id',
-        deleteAll: 'DELETE /api/todos',
-      },
-    },
+    error: 'Route not found'
   })
 })
 

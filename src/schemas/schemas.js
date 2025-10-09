@@ -48,6 +48,6 @@ export const updateTodoSchema = yup.object({
     .of(tagSchema)
     .optional()
 })
-  .test('not-empty', 'The request body must contain at least one field to update.', (value) => {
+  .test('not-empty', 'The request body must contain at least one field to update.', (value) => { //not-empty is the name of the validation test, error message,function;
     return !!Object.keys(value).length;
   });

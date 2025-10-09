@@ -3,31 +3,6 @@
 // import { fileURLToPath } from 'url'
 import todo from '../models/todo.js'
 
-// const __filename = fileURLToPath(import.meta.url)
-// const __dirname = path.dirname(__filename)
-// const dbPath = path.join(__dirname, '../../database/db.json')
-
-// // function to read from database
-// const readDatabase = async () => {
-//   try {
-//     const data = await fs.readFile(dbPath, 'utf8')
-//     return JSON.parse(data)
-//   } catch (error) {
-//     if (error.code === 'ENOENT') {
-//       await writeDatabase({ tasks: [] })
-//       return { tasks: [] }
-//     }
-//     throw error
-//   }
-// }
-
-// // function to write to database
-// const writeDatabase = async (data) => {
-//   await fs.writeFile(dbPath, JSON.stringify(data, null, 2))
-// }
-
-// Get all tasks
-
 export const getAllTasks = async (req, res) => {
   try {
     const { search, category } = req.query
@@ -37,8 +12,6 @@ export const getAllTasks = async (req, res) => {
 
     if (search && category) {
       const searchTerm = search.trim()
-
-      // filteredTasks = db.tasks.filter(task => {
       switch (category.toLowerCase()) {
         case 'name':
           query.text = { $regex: searchTerm, $options: 'i' } //for case insensitive search
@@ -57,15 +30,20 @@ export const getAllTasks = async (req, res) => {
         case 'tags':
           // return task.tags && Array.isArray(task.tags) && task.tags.some(tag => tag.toLowerCase().includes(searchTerm))
 
-          query.tags = { $in: [new RegExp(searchTerm, 'i')] } // to search in an array
+          query.tags = { $in: [new RegExp(searchTerm, 'i')] } // to search in an array, $in is a mongodb query operator, it created a js regular expression object
           break;
 
         default:
           return true;
       }
-      // })
     }
-    const tasks = await todo.find(query).sort({ createdAt: -1 }) // newest first sorting logic
+
+    // const sortCriteria = {
+    //   createdAt: -1,
+    //   completed: 1,
+    //   priority: -1,
+    // }
+    const tasks = await todo.find(query)   //  .sort() implementation
     res.json(tasks)
   } catch (error) {
     console.error('Error reading database:', error)
@@ -73,7 +51,6 @@ export const getAllTasks = async (req, res) => {
   }
 }
 
-// Get task by ID
 export const getTaskById = async (req, res) => {
   try {
     const { id } = req.params
@@ -92,32 +69,17 @@ export const getTaskById = async (req, res) => {
   }
 }
 
-// Create new task
 export const createTask = async (req, res) => {
   try {
-    const { text, priority, completed, tags } = req.body
+    // const { text, priority, completed, tags } = req.body
 
     // if (!text || !text.trim()) {
     //   return res.status(400).json({ error: 'Task text is required' }) // no need as already added validation
     // }
 
-    const taskTags = Array.isArray(tags) ? tags : [];
+    // const taskTags = Array.isArray(tags) ? tags : [];
 
-    // const newTask = {
-    //   id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
-    //   text: text.trim(),
-    //   priority: priority || 2,
-    //   completed: false,
-    //   tags: taskTags,
-    //   createdAt: new Date().toISOString(),
-    // }
-
-    const newTask = await todo.create({
-      text: text.trim(),
-      priority: priority,
-      completed: completed || false,
-      tags: taskTags,
-    })
+    const newTask = await todo.create(req.body);
 
     // const db = await readDatabase()
     // db.tasks.push(newTask)
@@ -130,17 +92,17 @@ export const createTask = async (req, res) => {
   }
 }
 
-// Update task
+
 export const updateTask = async (req, res) => {
   try {
-    const { id } = req.params
+    const { id } = req.params;
 
     // const { text, priority, completed, tags } = req.body
     // const db = await readDatabase()
     // const taskIndex = db.tasks.findIndex((task) => task.id === id)
 
     const updatedTask = await todo.findByIdAndUpdate(id,
-      { $set: req.body },
+      req.body,
       {
         new: true,
         runValidators: true,
@@ -151,7 +113,7 @@ export const updateTask = async (req, res) => {
       return res.status(404).json({ error: 'Task not found' })
     }
 
-    // Update task fields
+
     // if (text !== undefined) db.tasks[taskIndex].text = text.trim()
     // if (priority !== undefined) db.tasks[taskIndex].priority = priority
     // if (completed !== undefined) db.tasks[taskIndex].completed = completed
@@ -166,11 +128,10 @@ export const updateTask = async (req, res) => {
   }
 }
 
-// Delete task
+
 export const deleteTask = async (req, res) => {
   try {
-    const { id } = req.params
-    const deletedTask = await todo.findByIdAndDelete(id)
+    const deletedTask = await todo.findByIdAndDelete(req.params.id)
     // const db = await readDatabase()
     // const taskIndex = db.tasks.findIndex((task) => task.id === id)
 
@@ -188,7 +149,7 @@ export const deleteTask = async (req, res) => {
   }
 }
 
-// Delete all tasks
+
 export const deleteAllTasks = async (req, res) => {
   try {
     // const db = await readDatabase()
