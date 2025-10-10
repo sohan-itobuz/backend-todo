@@ -32,7 +32,9 @@ export const getAllTasks = async (req, res) => {
 
           query.tags = { $in: [new RegExp(searchTerm, 'i')] } // to search in an array, $in is a mongodb query operator, it created a js regular expression object
           break;
-
+        case 'completed':
+          query.completed = { $eq: searchTerm.toLowerCase() === 'true' }
+          break;
         default:
           return true;
       }
@@ -43,7 +45,7 @@ export const getAllTasks = async (req, res) => {
     //   completed: 1,
     //   priority: -1,
     // }
-    const tasks = await todo.find(query)   //  .sort() implementation
+    const tasks = await todo.find(query).sort({ updatedAt: -1 })  //  .sort() implementation
     res.json(tasks)
   } catch (error) {
     console.error('Error reading database:', error)

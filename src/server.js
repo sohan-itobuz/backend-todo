@@ -4,6 +4,9 @@ import cors from 'cors'
 import router from './routes/routes.js'
 import connectDB from './database/db.js'
 
+import authRoutes from './routes/auth.js'
+import protectedRoute from './routes/protectedRoute.js'
+
 
 connectDB();
 
@@ -16,7 +19,8 @@ app.use(express.json())
 
 
 app.use('/api/todos', router)
-
+app.use('/api/auth', authRoutes)
+app.use('/api/protected', protectedRoute)
 
 app.get('/', (req, res) => {
   res.json({
