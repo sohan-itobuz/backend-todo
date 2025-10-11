@@ -4,8 +4,9 @@ import cors from 'cors'
 import router from './routes/routes.js'
 import connectDB from './database/db.js'
 
-import authRoutes from './routes/auth.js'
+import authRoutes from './routes/authRoute.js'
 import protectedRoute from './routes/protectedRoute.js'
+import loggerMiddleware from './middlewares/logger.js'
 
 
 connectDB();
@@ -17,6 +18,7 @@ const PORT = process.env.PORT || 3001
 app.use(cors())
 app.use(express.json())
 
+app.use(loggerMiddleware);
 
 app.use('/api/todos', router)
 app.use('/api/auth', authRoutes)
@@ -39,6 +41,7 @@ app.use((req, res) => {
     error: 'Route not found'
   })
 })
+
 
 // Error handling middleware
 //eslint-disable-next-line

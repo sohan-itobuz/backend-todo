@@ -1,10 +1,10 @@
-import express from "express";
+import Router from "express";
+import verifyToken from "../middlewares/verifyTokenMiddleware.js";
 
-const router = express.Router();
+const protectedRouter = new Router();
 
-import verifyToken from "../middlewares/authMiddleware.js";
 // Protected route
-router.get('/', verifyToken, (req, res) => {
+protectedRouter.get('/', verifyToken, (req, res) => {
   res.status(200).json({ message: 'Protected route accessed' });
 });
-export default router;
+export default protectedRouter;
