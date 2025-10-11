@@ -1,5 +1,5 @@
 import Router from "express";
-import verifyToken from "../middlewares/verifyTokenMiddleware.js";
+import verifyToken from "../middlewares/verifyAccessTokenMiddleware.js";
 
 const protectedRouter = new Router();
 
