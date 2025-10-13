@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 // import jwt from "jsonwebtoken";
 import User from "../models/user.js";
+import Otp from "../models/otpModel.js";
 import tokenGenerator from "../services/tokenGenerator.js";
 
 dotenv.config();
@@ -9,18 +10,30 @@ dotenv.config();
 export const refreshTokens = [];
 
 export default class AuthController {
-  registerUser = async (req, res) => {
+  registerUser = async (req, res, next) => {
     try {
 
-      const { email, password } = req.body;
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const { email, password, otp } = req.body;
 
-      console.log(email, password, hashedPassword);
-      const user = new User({ email, password: hashedPassword });
+      const response = await Otp.find({ email }).sort({ createdAt: -1 }).limit(1);
+      console.log(response);
+      if (response.length === 0 || otp !== response[0].otp) {
+        return res.status(400).json({
+          success: false,
+          message: 'The OTP is not valid',
+        });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      console.log(email, password, hashedPassword, otp);
+
+      const user = new User({ email, password: hashedPassword, verified: true });
       await user.save();
+
       res.status(201).json({ success: true, user });
     } catch (error) {
-      res.status(500).json({ success: false, Error: error });
+      res.status(500).json({ success: false, Error: error.message });
+      next(error);
     }
   };
 
@@ -56,5 +69,7 @@ export default class AuthController {
       next(error);
     }
   };
+
+
 
 }

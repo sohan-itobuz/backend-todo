@@ -41,12 +41,14 @@ export default async function verifyToken(req, res, next) {
     }
 
     try {
+      console.log(accessToken);
       const decoded = jwt.verify(accessToken, process.env.JWT_SECRET_KEY)
       console.log(decoded);
       req.user = decoded
       return next()
 
     } catch (error) {
+      //console.log(error)
       if (error.name === 'TokenExpiredError' && refreshToken) {
         try {
           const refreshPayload = jwt.verify(

@@ -7,6 +7,7 @@ import connectDB from './database/db.js'
 import authRoutes from './routes/authRoute.js'
 import protectedRoute from './routes/protectedRoute.js'
 import loggerMiddleware from './middlewares/logger.js'
+import otpRouter from './routes/otpRoutes.js'
 
 
 connectDB();
@@ -21,7 +22,7 @@ app.use(express.json())
 app.use(loggerMiddleware);
 
 app.use('/api/todos', router)
-app.use('/api/auth', authRoutes)
+app.use('/api/auth', authRoutes, otpRouter)
 app.use('/api/auth/protected', protectedRoute)
 
 app.get('/', (req, res) => {
