@@ -1,4 +1,4 @@
-import { createTodoSchema, updateTodoSchema } from '../schemas/schemas.js';
+import { createTodoSchema, updateTodoSchema } from '../schemas/todoSchemas.js';
 import { ValidationError } from 'yup';
 
 const validate = (schema) => async (req, res, next) => {  //higher order function

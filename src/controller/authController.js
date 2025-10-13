@@ -1,11 +1,12 @@
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
 import User from "../models/user.js";
+import tokenGenerator from "../services/tokenGenerator.js";
 
 dotenv.config();
 
-const refreshTokens = [];
+export const refreshTokens = [];
 
 export default class AuthController {
   registerUser = async (req, res) => {
@@ -26,7 +27,8 @@ export default class AuthController {
 
   loginUser = async (req, res, next) => {
     try {
-      const secretKey = process.env.JWT_SECRET_KEY;
+      const accessKey = process.env.JWT_SECRET_KEY;
+      const refreshKey = process.env.JWT_REFRESH_KEY;
       const { email, password } = req.body;
 
       const user = await User.findOne({ email });
@@ -41,18 +43,14 @@ export default class AuthController {
         return res.status(401).json({ success: false, message: 'Password not matched' });
       }
 
-      const token = jwt.sign({ userId: user._id }, secretKey, {
-        expiresIn: process.env.JWT_EXPIRATION,
-      });
+      const accessToken = tokenGenerator.generateAccessToken(user._id, accessKey, process.env.JWT_EXPIRATION);
 
-      const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_KEY, {
-        expiresIn: process.env.JWT_REFRESH_EXPIRATION,
-      });
+      const refreshToken = tokenGenerator.generateRefreshToken(user._id, refreshKey, process.env.JWT_REFRESH_EXPIRATION);
 
       refreshTokens.push(refreshToken);
 
       delete user._doc.password;
-      res.status(200).json({ success: true, token, user });
+      res.status(200).json({ success: true, accessToken, refreshToken, user });
     } catch (error) {
       res.status(500).json({ error: `Login failed: ${error}` });
       next(error);
