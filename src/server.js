@@ -22,7 +22,7 @@ app.use(loggerMiddleware);
 
 app.use('/api/todos', router)
 app.use('/api/auth', authRoutes)
-app.use('/api/protected', protectedRoute)
+app.use('/api/auth/protected', protectedRoute)
 
 app.get('/', (req, res) => {
   res.json({

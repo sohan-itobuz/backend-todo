@@ -42,6 +42,7 @@ export default async function verifyToken(req, res, next) {
 
     try {
       const decoded = jwt.verify(accessToken, process.env.JWT_SECRET_KEY)
+      console.log(decoded);
       req.user = decoded
       return next()
 
@@ -50,13 +51,13 @@ export default async function verifyToken(req, res, next) {
         try {
           const refreshPayload = jwt.verify(
             refreshToken,
-            process.env.JWT_REFRESH_SECRET_KEY
+            process.env.JWT_REFRESH_KEY
           )
 
           const newAccessToken = tokenGenerator.generateAccessToken({ userId: refreshPayload.userId }, process.env.JWT_SECRET_KEY, process.env.JWT_EXPIRATION);
           console.log(newAccessToken);
 
-          res.setHeader('authorization', newAccessToken, refreshToken)
+          res.setHeader('authorization', 'Bearer ' + newAccessToken + ' ' + refreshToken)
 
           // Set user from refresh token payload
           req.user = refreshPayload
