@@ -120,9 +120,9 @@ export default class AuthController {
 
 
   resetPassword = async (req, res) => {
-    const { email, currentPassword, newPassword } = req.body
+    const { email, oldPassword, newPassword } = req.body
 
-    if (!currentPassword || !newPassword) {
+    if (!oldPassword || !newPassword) {
       return res.status(400).json({
         success: false,
         message: 'Current password and new password are required.',
@@ -130,12 +130,12 @@ export default class AuthController {
     }
 
     try {
-      const user = await User.findById(email)
+      const user = await User.findOne({ email })
       if (!user) {
         return res.status(404).json({ success: false, message: 'User not found.' })
       }
 
-      const isMatch = await bcrypt.compare(currentPassword, user.password)
+      const isMatch = await bcrypt.compare(oldPassword, user.password)
       if (!isMatch) {
         return res.status(401).json({ success: false, message: 'Current password is incorrect.' })
       }

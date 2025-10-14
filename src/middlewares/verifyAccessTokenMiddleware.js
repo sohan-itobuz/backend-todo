@@ -27,7 +27,7 @@ export default async function verifyToken(req, res, next) {
       //console.log(error)
       if (error.name === 'TokenExpiredError') {
 
-        res.redirect('localhost:3001/api/auth/protected/refresh-token');
+        // res.redirect('localhost:3001/api/auth/protected/refresh-token'); // will redirect to refresh token with the help of interceptor in axios from frontend
         // try {
         //   const refreshPayload = jwt.verify(
         //     refreshToken,
