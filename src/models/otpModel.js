@@ -2,22 +2,33 @@ import mongoose from "mongoose";
 import { sendVerificationMail } from "../services/sendVerificationMail.js";
 
 
+const otpSubSchema = new mongoose.Schema(
+  {
+    otp: {
+      type: String,
+      required: true,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    expiryOTP: {
+      type: Date,
+      default: () => new Date(Date.now() + 5 * 60 * 1000),
+      // expires: 0,
+    },
+  },
+  { _id: false }
+)
+
 
 const otpSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
-  otp: {
-    type: String,
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now(),
-    index: { expires: 300 },
-    // expires: 60 * 5, // The document will be automatically deleted after 5 minutes of its creation time
-  },
+  otp: [otpSubSchema],
 });
 
 otpSchema.pre("save", async function (next) {
