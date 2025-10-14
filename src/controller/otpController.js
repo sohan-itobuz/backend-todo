@@ -7,27 +7,27 @@ export const sendOTP = async (req, res) => {
   try {
     const { email } = req.body
 
-    const userExists = await User.findOne({ email })
-    if (userExists.verified) {
-      return res.status(401).json({
-        success: false,
-        message: 'User is already registered and verified',
-      })
-    } else {
-      const otp = otpGenerator.generate(6, {
-        upperCaseAlphabets: false,
-        lowerCaseAlphabets: false,
-        specialChars: false,
-      })
+    // const userExists = await User.findOne({ email })
+    // if (userExists.verified) {
+    //   return res.status(401).json({
+    //     success: false,
+    //     message: 'User is already registered and verified',
+    //   })
+    // } else {
+    const otp = otpGenerator.generate(6, {
+      upperCaseAlphabets: false,
+      lowerCaseAlphabets: false,
+      specialChars: false,
+    })
 
-      await sendVerificationMail(email, otp);
+    await sendVerificationMail(email, otp);
 
-      res.status(200).json({
-        success: true,
-        message: 'OTP sent successfully',
-        otp,
-      })
-    }
+    res.status(200).json({
+      success: true,
+      message: 'OTP sent successfully',
+      otp,
+    })
+    // }
   } catch (error) {
     console.error(error)
     res.status(500).json({ success: false, error: error.message })
