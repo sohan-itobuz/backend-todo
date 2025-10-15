@@ -18,10 +18,10 @@ export default class AuthController {
 
       const hashedPassword = await bcrypt.hash(password, 10);
       // console.log(email, password, hashedPassword);
-      let testUser = User.findOne({ email });
-      if (testUser) {
-        return next(new Error('User with the given email already exist'));
-      }
+      // let testUser = User.findOne({ email });
+      // if (testUser) {
+      //   return next(new Error('User with the given email already exist'));
+      // }
       const user = new User({ email, password: hashedPassword });
       await user.save();
 
@@ -51,6 +51,10 @@ export default class AuthController {
         return res.status(401).json({ success: false, message: 'Password not matched' });
       }
 
+      if (!user.verified) {
+        return res.status(401).json({ success: false, message: 'User is not verified.' })
+      }
+
       const accessToken = tokenGenerator.generateAccessToken(user._id, accessKey, process.env.JWT_EXPIRATION);
 
       const refreshToken = tokenGenerator.generateRefreshToken(user._id, refreshKey, process.env.JWT_REFRESH_EXPIRATION);
@@ -74,6 +78,7 @@ export default class AuthController {
         res.status(404)
         throw new Error('User not found')
       }
+
       await user.save()
 
       res.status(200).json({ message: 'Logged out successfully' })
