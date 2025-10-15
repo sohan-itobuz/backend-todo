@@ -3,13 +3,12 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 // import Otp from "../models/otpModel.js";
-import tokenGenerator from "../services/tokenGenerator.js";
+import tokenGenerator from "../utils/tokenGenerator.js";
 import { LocalStorage } from "node-localstorage";
 const localStorage = new LocalStorage('./scratch');
 
 dotenv.config();
 
-export const refreshTokens = [];
 
 export default class AuthController {
   registerUser = async (req, res, next) => {
@@ -19,7 +18,10 @@ export default class AuthController {
 
       const hashedPassword = await bcrypt.hash(password, 10);
       // console.log(email, password, hashedPassword);
-
+      let testUser = User.findOne({ email });
+      if (testUser) {
+        return next(new Error('User with the given email already exist'));
+      }
       const user = new User({ email, password: hashedPassword });
       await user.save();
 
@@ -53,12 +55,11 @@ export default class AuthController {
 
       const refreshToken = tokenGenerator.generateRefreshToken(user._id, refreshKey, process.env.JWT_REFRESH_EXPIRATION);
 
-      refreshTokens.push(refreshToken);
-
       delete user._doc.password;
+
       res.status(200).json({ success: true, accessToken, refreshToken, user });
     } catch (error) {
-      res.status(500).json({ error: `Login failed: ${error}` });
+      res.status(404).json({ error: `Login failed: ${error}` });
       next(error);
     }
   };

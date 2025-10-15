@@ -3,7 +3,7 @@ import Otp from "../models/otpModel.js";
 import User from "../models/user.js";
 import { sendVerificationMail } from "../services/sendVerificationMail.js";
 
-export const sendOTP = async (req, res) => {
+export const sendOTP = async (req, res, next) => {
   try {
     const { email } = req.body
 
@@ -30,7 +30,8 @@ export const sendOTP = async (req, res) => {
     // }
   } catch (error) {
     console.error(error)
-    res.status(500).json({ success: false, error: error.message })
+    // res.status(500).json({ success: false, error: error.message })
+    next(error);
   }
 }
 

@@ -25,6 +25,7 @@ const todoSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    userId: { type: mongoose.Types.ObjectId, ref: 'User' },
   },
   {
     timestamps: true,

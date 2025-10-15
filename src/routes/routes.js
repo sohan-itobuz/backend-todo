@@ -1,7 +1,6 @@
 import express from 'express'
 import {
   getAllTasks,
-  getTaskById,
   createTask,
   updateTask,
   deleteTask,
@@ -16,8 +15,8 @@ const router = express.Router()
 // GET all tasks
 router.get('/', getAllTasks)
 
-// GET task by ID
-router.get('/:id', getTaskById)
+// // GET task by ID
+// router.get('/:id', getTaskById)
 
 // CREATE new task
 router.post('/', validateCreateTodo, createTask)

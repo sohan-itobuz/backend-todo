@@ -1,4 +1,4 @@
-import userSchema from '../models/userModel.js';
+import userSchema from '../models/user.js';
 import { ValidationError } from 'yup';
 
 const validateUser = (userSchema) => async (req, res, next) => {  //higher order function

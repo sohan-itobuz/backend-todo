@@ -15,8 +15,8 @@ const otpSubSchema = new mongoose.Schema(
     expiryOTP: {
       type: Date,
       default: () => new Date(Date.now() + 5 * 60 * 1000),
-      // expires: 0,
     },
+    userId: { type: mongoose.Types.ObjectId, ref: 'User' },
   },
   { _id: false }
 )
