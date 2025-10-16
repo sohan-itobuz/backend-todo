@@ -176,13 +176,12 @@ export default class AuthController {
       const newRefreshToken = tokenGenerator.generateRefreshToken({ userId: refreshPayload.userId }, process.env.JWT_REFRESH_KEY, process.env.JWT_REFRESH_EXPIRATION);
       console.log(newAccessToken, newRefreshToken);
 
-      res.send({
+      return res.status(200).send({
         success: true,
         accessToken: newAccessToken,
         refreshToken: newRefreshToken,
+        message: 'New Access and Refresh Tokens generated successfully'
       });
-
-      return res.status(200).json({ message: 'New Access and Refresh Tokens generated successfully' })
 
     } catch (error) {
       return res.status(401).json({
