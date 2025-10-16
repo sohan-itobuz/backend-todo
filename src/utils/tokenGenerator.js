@@ -4,13 +4,14 @@ import jwt from 'jsonwebtoken';
 
 export default class tokenGenerator {
   static generateAccessToken(userId, secretKey, expiresIn) {
-    const accessToken = jwt.sign({ userId }, secretKey, { expiresIn });
+    const accessToken = jwt.sign(userId, secretKey, { expiresIn });
     // localStorage.setItem('accessToken', JSON.stringify(accessToken));
+
     return accessToken;
   }
 
   static generateRefreshToken(userId, secretKey, expiresIn) {
-    const refreshToken = jwt.sign({ userId }, secretKey, { expiresIn });
+    const refreshToken = jwt.sign(userId, secretKey, { expiresIn });
     // localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
     return refreshToken;
 

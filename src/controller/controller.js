@@ -5,13 +5,13 @@ import todo from '../models/todo.js'
 
 export const getAllTasks = async (req, res) => {
   try {
-    const { userId, search, category } = req.query
-    // const db = await readDatabase()
-    // let filteredTasks = db.tasks
+    const userId = req.user.userId;
+    const { search, category } = req.query;
+
     let query = {};
 
     if (search && category) {
-      const searchTerm = search.trim()
+      const searchTerm = search;
       switch (category.toLowerCase()) {
         case 'name': {
           query = {
@@ -25,12 +25,12 @@ export const getAllTasks = async (req, res) => {
           break;
         }
         case 'priority': {
-          const searchPriority = parseInt(searchTerm)
+          // const searchPriority = parseInt(searchTerm)
           query =
           {
             $and: [
               {
-                priority: { searchPriority }
+                priority: { searchTerm }
               },
               { userId }
             ]
@@ -88,15 +88,21 @@ export const getAllTasks = async (req, res) => {
 
 export const createTask = async (req, res) => {
   try {
-    const { userId, text, priority, completed, tags } = req.body
-    const Todo = new todo({
-      userId, text, priority, completed, tags
-    })
+    // const { text, priority, completed, tags } = req.body
+    // console.log(req.user);
+    // const Todo = new todo({
+    //   userId, text, priority, completed, tags: JSON.parse(tags)
+    // })
+    // const newTask = await todo.create({ userId, text, priority, completed, tags });
+    // console.log(newTask);
 
+    const userId = req.user.userId;
+    console.log(userId);
+    const newTask = new todo({ userId, ...req.body });
+    await newTask.save();
 
-    const newTask = await todo.create(Todo);
+    res.status(201).send({ success: true, newTask });
 
-    res.status(201).json(newTask)
   } catch (error) {
     console.error('Error writing to database:', error)
     res.status(500).json({ error: 'Failed to create task' })
@@ -106,9 +112,10 @@ export const createTask = async (req, res) => {
 
 export const updateTask = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params
+    const userId = req.user.userId
 
-    const updatedTask = await todo.findByIdAndUpdate(id,
+    const updatedTask = await todo.findByIdAndUpdate({ _id: id, userId },
       req.body,
       {
         new: true,
@@ -131,7 +138,7 @@ export const updateTask = async (req, res) => {
 
 export const deleteTask = async (req, res) => {
   try {
-    const deletedTask = await todo.findByIdAndDelete(req.params.id)
+    const deletedTask = await todo.findByIdAndDelete(req.params.id, req.user.userId);
 
     if (!deletedTask) {
       return res.status(404).json({ error: 'Task not found' })
@@ -147,7 +154,8 @@ export const deleteTask = async (req, res) => {
 
 export const deleteAllTasks = async (req, res) => {
   try {
-    const result = await todo.deleteMany({})
+    const userId = req.user.userId;
+    const result = await todo.deleteMany({ userId });
 
     res.json({ success: true, message: `All ${result.deletedCount} tasks deleted` })
   } catch (error) {

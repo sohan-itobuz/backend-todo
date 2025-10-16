@@ -9,8 +9,10 @@ import {
 // import todo from '../models/todo.js'
 
 import { validateCreateTodo, validateUpdateTodo } from '../validation/todoValidate.js'
+import AuthController from '../controller/authController.js';
 
 const router = express.Router()
+const authController = new AuthController();
 
 // GET all tasks
 router.get('/', getAllTasks)
@@ -30,4 +32,6 @@ router.delete('/:id', deleteTask)
 // DELETE all tasks
 router.delete('/', deleteAllTasks)
 
+//reset password
+router.post('/reset-password', authController.resetPassword);
 export default router

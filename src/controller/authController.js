@@ -4,8 +4,6 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 // import Otp from "../models/otpModel.js";
 import tokenGenerator from "../utils/tokenGenerator.js";
-import { LocalStorage } from "node-localstorage";
-const localStorage = new LocalStorage('./scratch');
 
 dotenv.config();
 
@@ -55,9 +53,9 @@ export default class AuthController {
         return res.status(401).json({ success: false, message: 'User is not verified.' })
       }
 
-      const accessToken = tokenGenerator.generateAccessToken(user._id, accessKey, process.env.JWT_EXPIRATION);
+      const accessToken = tokenGenerator.generateAccessToken({ userId: user._id }, accessKey, process.env.JWT_EXPIRATION);
 
-      const refreshToken = tokenGenerator.generateRefreshToken(user._id, refreshKey, process.env.JWT_REFRESH_EXPIRATION);
+      const refreshToken = tokenGenerator.generateRefreshToken({ userId: user._id }, refreshKey, process.env.JWT_REFRESH_EXPIRATION);
 
       delete user._doc.password;
 
@@ -68,24 +66,24 @@ export default class AuthController {
     }
   };
 
-  logoutUser = async (req, res, next) => {
-    try {
-      const { userId } = req.body
+  // logoutUser = async (req, res, next) => {
+  //   try {
+  //     const { userId } = req.body
 
-      const user = await User.findById(userId)
+  //     const user = await User.findById(userId)
 
-      if (!user) {
-        res.status(404)
-        throw new Error('User not found')
-      }
+  //     if (!user) {
+  //       res.status(404)
+  //       throw new Error('User not found')
+  //     }
 
-      await user.save()
+  //     await user.save()
 
-      res.status(200).json({ message: 'Logged out successfully' })
-    } catch (error) {
-      next(error)
-    }
-  }
+  //     res.status(200).json({ message: 'Logged out successfully' })
+  //   } catch (error) {
+  //     next(error)
+  //   }
+  // }
 
 
   setNewPasswordAfterOTP = async (req, res) => {
@@ -164,7 +162,7 @@ export default class AuthController {
   }
 
   refreshAccessToken = (req, res) => {
-    const refreshToken = localStorage['refreshToken'] ? JSON.parse(localStorage['refreshToken']) : null;
+    const { refreshToken } = req.body;
 
     if (!refreshToken) {
       return res.status(401).json({ message: 'Refresh Token is required' });
@@ -177,6 +175,13 @@ export default class AuthController {
       const newAccessToken = tokenGenerator.generateAccessToken({ userId: refreshPayload.userId }, process.env.JWT_SECRET_KEY, process.env.JWT_EXPIRATION);
       const newRefreshToken = tokenGenerator.generateRefreshToken({ userId: refreshPayload.userId }, process.env.JWT_REFRESH_KEY, process.env.JWT_REFRESH_EXPIRATION);
       console.log(newAccessToken, newRefreshToken);
+
+      res.send({
+        success: true,
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+      });
+
       return res.status(200).json({ message: 'New Access and Refresh Tokens generated successfully' })
 
     } catch (error) {

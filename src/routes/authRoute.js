@@ -10,7 +10,7 @@ authRouter.post('/sign-up', validateUserSchema, authController.registerUser);
 
 authRouter.post('/login', validateUserSchema, authController.loginUser);
 
-authRouter.post('/log-out', authController.logoutUser);
+// authRouter.post('/log-out', authController.logoutUser);
 
 authRouter.post('/forget-password/send-otp', sendOTP);
 authRouter.post('/forget-password/verify-otp', verifyOTP);

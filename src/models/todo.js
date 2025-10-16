@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 
 const todoSchema = new mongoose.Schema(
   {
+    userId: { type: mongoose.Types.ObjectId, ref: 'User' },
+
     text: {
       type: String,
       required: [true, 'Please add a task description'],
@@ -25,7 +27,6 @@ const todoSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
-    userId: { type: mongoose.Types.ObjectId, ref: 'User' },
   },
   {
     timestamps: true,

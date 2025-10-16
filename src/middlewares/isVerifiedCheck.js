@@ -13,6 +13,7 @@ export default async function isVerified(req, res, next) {
     }
     next();
   } catch (error) {
+    res.status(401);
     next(error);
   }
 }
