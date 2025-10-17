@@ -6,9 +6,10 @@ import todo from '../models/todo.js'
 export const getAllTasks = async (req, res) => {
   try {
     const userId = req.user.userId;
+    // console.log(userId);
     const { search, category } = req.query;
 
-    let query = {};
+    let query = { userId };
 
     if (search && category) {
       const searchTerm = search;
@@ -25,15 +26,19 @@ export const getAllTasks = async (req, res) => {
           break;
         }
         case 'priority': {
-          // const searchPriority = parseInt(searchTerm)
-          query =
-          {
-            $and: [
-              {
-                priority: { searchTerm }
-              },
-              { userId }
-            ]
+          const searchPriority = parseInt(searchTerm);
+
+          if (!isNaN(searchPriority)) {
+            query = {
+              $and: [
+                {
+                  priority: searchPriority
+                },
+                { userId }
+              ]
+            };
+          } else {
+            query = { userId, priority: null };
           }
           break;
         }
@@ -53,13 +58,14 @@ export const getAllTasks = async (req, res) => {
             $and: [
               {
                 completed: { $eq: searchTerm.toLowerCase() === 'true' }
-              }
+              },
+              { userId }
             ]
           }
           break;
         }
         default:
-          return true;
+          break;
       }
     }
 
@@ -138,7 +144,7 @@ export const updateTask = async (req, res) => {
 
 export const deleteTask = async (req, res) => {
   try {
-    const deletedTask = await todo.findByIdAndDelete(req.params.id, req.user.userId);
+    const deletedTask = await todo.findByIdAndDelete({ _id: req.params.id, userId: req.user.userId });
 
     if (!deletedTask) {
       return res.status(404).json({ error: 'Task not found' })

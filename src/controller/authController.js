@@ -162,7 +162,7 @@ export default class AuthController {
   }
 
   refreshAccessToken = (req, res) => {
-    const { refreshToken } = req.body;
+    const refreshToken = req.headers['refresh-token'];
 
     if (!refreshToken) {
       return res.status(401).json({ message: 'Refresh Token is required' });
