@@ -15,11 +15,7 @@ export default class AuthController {
       const { email, password } = req.body;
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      // console.log(email, password, hashedPassword);
-      // let testUser = User.findOne({ email });
-      // if (testUser) {
-      //   return next(new Error('User with the given email already exist'));
-      // }
+
       const user = new User({ email, password: hashedPassword });
       await user.save();
 
@@ -65,25 +61,6 @@ export default class AuthController {
       next(error);
     }
   };
-
-  // logoutUser = async (req, res, next) => {
-  //   try {
-  //     const { userId } = req.body
-
-  //     const user = await User.findById(userId)
-
-  //     if (!user) {
-  //       res.status(404)
-  //       throw new Error('User not found')
-  //     }
-
-  //     await user.save()
-
-  //     res.status(200).json({ message: 'Logged out successfully' })
-  //   } catch (error) {
-  //     next(error)
-  //   }
-  // }
 
 
   setNewPasswordAfterOTP = async (req, res) => {

@@ -2,18 +2,15 @@ import otpGenerator from "otp-generator";
 import Otp from "../models/otpModel.js";
 import User from "../models/user.js";
 import { sendVerificationMail } from "../services/sendVerificationMail.js";
+import tokenGenerator from "../utils/tokenGenerator.js";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const sendOTP = async (req, res, next) => {
   try {
     const { email } = req.body
 
-    // const userExists = await User.findOne({ email })
-    // if (userExists.verified) {
-    //   return res.status(401).json({
-    //     success: false,
-    //     message: 'User is already registered and verified',
-    //   })
-    // } else {
     const otp = otpGenerator.generate(6, {
       upperCaseAlphabets: false,
       lowerCaseAlphabets: false,
@@ -30,7 +27,6 @@ export const sendOTP = async (req, res, next) => {
     // }
   } catch (error) {
     console.error(error)
-    // res.status(500).json({ success: false, error: error.message })
     next(error);
   }
 }
@@ -71,7 +67,9 @@ export async function verifyOTP(req, res) {
       { new: true }
     )
 
-    return res.status(200).json({ success: true, message: 'OTP is valid.' })
+    const accessToken = tokenGenerator.generateAccessToken(email, process.env.JWT_SECRET_KEY, { expiresIn: "2m" });
+
+    return res.status(200).json({ success: true, message: 'OTP is valid.', accessToken })
 
   } catch (error) {
     console.error(error)
