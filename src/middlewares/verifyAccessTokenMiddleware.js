@@ -1,8 +1,5 @@
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-// import user from "../models/user.js";
-
-dotenv.config();
+import { env } from "../config/envConfig";
 
 export default async function verifyToken(req, res, next) {
   try {
@@ -16,11 +13,8 @@ export default async function verifyToken(req, res, next) {
     }
 
     console.log(accessToken);
-    const decoded = jwt.verify(accessToken, process.env.JWT_SECRET_KEY);
-    // console.log(decoded);
-    // const uId = decoded.userId;
-    // const User = user.findById({ uId })
-    // console.log(User);
+    const decoded = jwt.verify(accessToken, env.JWT_SECRET_KEY);
+
     req.user = decoded;
     return next();
 

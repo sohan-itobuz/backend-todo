@@ -1,11 +1,8 @@
-import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
-// import Otp from "../models/otpModel.js";
 import tokenGenerator from "../utils/tokenGenerator.js";
-
-dotenv.config();
+import { env } from "../config/envConfig.js";
 
 
 export default class AuthController {
@@ -29,8 +26,8 @@ export default class AuthController {
 
   loginUser = async (req, res, next) => {
     try {
-      const accessKey = process.env.JWT_SECRET_KEY;
-      const refreshKey = process.env.JWT_REFRESH_KEY;
+      const accessKey = env.JWT_SECRET_KEY;
+      const refreshKey = env.JWT_REFRESH_KEY;
       const { email, password } = req.body;
 
       const user = await User.findOne({ email });
@@ -49,9 +46,9 @@ export default class AuthController {
         return res.status(401).json({ success: false, message: 'User is not verified.' })
       }
 
-      const accessToken = tokenGenerator.generateAccessToken({ userId: user._id }, accessKey, process.env.JWT_EXPIRATION);
+      const accessToken = tokenGenerator.generateAccessToken({ userId: user._id }, accessKey, env.JWT_EXPIRATION);
 
-      const refreshToken = tokenGenerator.generateRefreshToken({ userId: user._id }, refreshKey, process.env.JWT_REFRESH_EXPIRATION);
+      const refreshToken = tokenGenerator.generateRefreshToken({ userId: user._id }, refreshKey, env.JWT_REFRESH_EXPIRATION);
 
       delete user._doc.password;
 
@@ -147,10 +144,10 @@ export default class AuthController {
     try {
       const refreshPayload = jwt.verify(
         refreshToken,
-        process.env.JWT_REFRESH_KEY
+        env.JWT_REFRESH_KEY
       )
-      const newAccessToken = tokenGenerator.generateAccessToken({ userId: refreshPayload.userId }, process.env.JWT_SECRET_KEY, process.env.JWT_EXPIRATION);
-      const newRefreshToken = tokenGenerator.generateRefreshToken({ userId: refreshPayload.userId }, process.env.JWT_REFRESH_KEY, process.env.JWT_REFRESH_EXPIRATION);
+      const newAccessToken = tokenGenerator.generateAccessToken({ userId: refreshPayload.userId }, env.JWT_SECRET_KEY, env.JWT_EXPIRATION);
+      const newRefreshToken = tokenGenerator.generateRefreshToken({ userId: refreshPayload.userId }, env.JWT_REFRESH_KEY, env.JWT_REFRESH_EXPIRATION);
       console.log(newAccessToken, newRefreshToken);
 
       return res.status(200).send({

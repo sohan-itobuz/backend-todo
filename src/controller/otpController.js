@@ -3,9 +3,7 @@ import Otp from "../models/otpModel.js";
 import User from "../models/user.js";
 import { sendVerificationMail } from "../services/sendVerificationMail.js";
 import tokenGenerator from "../utils/tokenGenerator.js";
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { env } from "../config/envConfig.js";
 
 export const sendOTP = async (req, res, next) => {
   try {
@@ -67,7 +65,7 @@ export async function verifyOTP(req, res) {
       { new: true }
     )
 
-    const accessToken = tokenGenerator.generateAccessToken({ email }, process.env.JWT_SECRET_KEY, process.env.JWT_EXPIRATION);
+    const accessToken = tokenGenerator.generateAccessToken({ email }, env.JWT_SECRET_KEY, env.JWT_EXPIRATION);
 
     return res.status(200).json({ success: true, message: 'OTP is valid.', accessToken })
 

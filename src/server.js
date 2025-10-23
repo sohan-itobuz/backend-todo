@@ -11,10 +11,12 @@ import otpRouter from './routes/otpRoutes.js'
 import errorHandler from './middlewares/errorHandler.js'
 import verifyToken from './middlewares/verifyAccessTokenMiddleware.js'
 
+import { env } from './config/envConfig.js';
+
 connectDB();
 
 const app = express()
-const PORT = process.env.PORT || 3001
+const PORT = env.PORT;
 
 
 app.use(cors())

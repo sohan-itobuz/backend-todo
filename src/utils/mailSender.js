@@ -1,6 +1,5 @@
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
-dotenv.config();
+import { env } from "../config/envConfig";
 
 export default async function mailSender(email, title, body) {
   try {
@@ -8,13 +7,13 @@ export default async function mailSender(email, title, body) {
     let transporter = nodemailer.createTransport({
       service: 'Gmail',
       auth: {
-        user: process.env.MAIL_SENDER,
-        pass: process.env.APP_PASSWORD,
+        user: env.MAIL_SENDER,
+        pass: env.APP_PASSWORD,
       }
     });
     // Send emails to users
     let info = await transporter.sendMail({
-      from: process.env.MAIL_SENDER,
+      from: env.MAIL_SENDER,
       to: email,
       subject: title,
       html: body,
