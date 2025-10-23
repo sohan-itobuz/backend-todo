@@ -9,8 +9,7 @@ export default class tokenGenerator {
 
   static generateRefreshToken(userId, secretKey, expiresIn) {
     const refreshToken = jwt.sign(userId, secretKey, { expiresIn });
+
     return refreshToken;
-
-
   }
 }

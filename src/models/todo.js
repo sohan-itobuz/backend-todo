@@ -30,15 +30,6 @@ const todoSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    // toJSON: {
-    //   virtuals: true,
-    //   transform: (doc, ret) => {
-    //     ret.id = ret._id; // Map Mongoose's _id to 'id' 
-    //     delete ret._id;
-    //     delete ret.__v;
-    //   },
-    // },
-    // toObject: { virtuals: true },
   }
 );
 
