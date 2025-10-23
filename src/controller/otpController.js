@@ -29,7 +29,6 @@ export const sendOTP = async (req, res, next) => {
   }
 }
 
-
 export async function verifyOTP(req, res) {
   const { email, otp } = req.body
 

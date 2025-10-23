@@ -4,7 +4,7 @@ const todoSchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Types.ObjectId, ref: 'User' },
 
-    text: {
+    title: {
       type: String,
       required: [true, 'Please add a task description'],
       trim: true,

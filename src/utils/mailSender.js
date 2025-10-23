@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { env } from "../config/envConfig";
+import { env } from "../config/envConfig.js";
 
 export default async function mailSender(email, title, body) {
   try {

@@ -18,7 +18,7 @@ export const getAllTasks = async (req, res) => {
           query = {
             $and: [
               {
-                text: { $regex: searchTerm, $options: 'i' } // i for case insensitive search
+                title: { $regex: searchTerm, $options: 'i' } // i for case insensitive search
               },
               { userId }
             ]
@@ -94,13 +94,6 @@ export const getAllTasks = async (req, res) => {
 
 export const createTask = async (req, res) => {
   try {
-    // const { text, priority, completed, tags } = req.body
-    // console.log(req.user);
-    // const Todo = new todo({
-    //   userId, text, priority, completed, tags: JSON.parse(tags)
-    // })
-    // const newTask = await todo.create({ userId, text, priority, completed, tags });
-    // console.log(newTask);
 
     const userId = req.user.userId;
     console.log(userId);

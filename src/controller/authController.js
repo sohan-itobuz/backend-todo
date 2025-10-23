@@ -11,6 +11,12 @@ export default class AuthController {
 
       const { email, password } = req.body;
 
+      const getUser = await User.findOne({ email });
+
+      if (getUser) {
+        return res.status(409).json({ success: false, message: 'User already exists.' });
+      }
+
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const user = new User({ email, password: hashedPassword });

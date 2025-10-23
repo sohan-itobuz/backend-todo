@@ -25,8 +25,8 @@ app.use(express.json())
 app.use(loggerMiddleware);
 
 app.use('/api/todos', verifyToken, router)
-app.use('/api/auth', authRoutes, otpRouter)
-app.use('/api/auth/protected', protectedRoute)
+app.use('/user/auth', authRoutes, otpRouter)
+app.use('/user/auth/protected', protectedRoute)
 
 app.get('/', (req, res) => {
   res.json({
