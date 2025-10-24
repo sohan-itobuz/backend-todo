@@ -77,27 +77,15 @@ export const getAllTasks = async (req, res) => {
   }
 }
 
-// export const getTaskById = async (req, res) => {
-//   try {
-//     const { id } = req.params
-//     const task = await todo.findById(id)
-//     if (!task) {
-//       return res.status(404).json({ error: 'Task not found' })
-//     }
-
-//     res.json(task)
-//   } catch (error) {
-//     console.error('Error reading database:', error)
-//     res.status(500).json({ error: 'Failed to fetch task' })
-//   }
-// }
 
 export const createTask = async (req, res) => {
   try {
 
     const userId = req.user.userId;
-    console.log(userId);
-    const newTask = new todo({ userId, ...req.body });
+    // console.log(userId);
+    const attachment = req.file ? req.file.filename : null;
+
+    const newTask = new todo({ userId, ...req.body, attachment });
     await newTask.save();
 
     res.status(201).send({ success: true, newTask });

@@ -64,9 +64,9 @@ export async function verifyOTP(req, res) {
       { new: true }
     )
 
-    const accessToken = tokenGenerator.generateAccessToken({ email }, env.JWT_SECRET_KEY, env.JWT_EXPIRATION);
+    const access_token = tokenGenerator.generateAccessToken({ email }, env.JWT_SECRET_KEY, env.JWT_EXPIRATION);
 
-    return res.status(200).json({ success: true, message: 'OTP is valid.', accessToken })
+    return res.status(200).json({ success: true, message: 'OTP is valid.', access_token })
 
   } catch (error) {
     console.error(error)

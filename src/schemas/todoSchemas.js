@@ -26,7 +26,10 @@ export const createTodoSchema = yup.object({
 
   tags: yup.array()
     .of(tagSchema)
-    .optional()
+    .optional(),
+
+  attachment: yup.mixed()
+    .nullable(),
 });
 
 export const updateTodoSchema = yup.object({

@@ -12,6 +12,8 @@ const userValidationSchema = yup.object().shape({
     .required('Password is required'),
 
   verified: yup.boolean().default(false),
+
+  profile_image: yup.mixed().nullable().default(null),
 })
 
 export default userValidationSchema

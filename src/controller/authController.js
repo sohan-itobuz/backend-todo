@@ -52,13 +52,13 @@ export default class AuthController {
         return res.status(401).json({ success: false, message: 'User is not verified.' })
       }
 
-      const accessToken = tokenGenerator.generateAccessToken({ userId: user._id }, accessKey, env.JWT_EXPIRATION);
+      const access_token = tokenGenerator.generateAccessToken({ userId: user._id }, accessKey, env.JWT_EXPIRATION);
 
-      const refreshToken = tokenGenerator.generateRefreshToken({ userId: user._id }, refreshKey, env.JWT_REFRESH_EXPIRATION);
+      const refresh_token = tokenGenerator.generateRefreshToken({ userId: user._id }, refreshKey, env.JWT_REFRESH_EXPIRATION);
 
       delete user._doc.password;
 
-      res.status(200).json({ success: true, accessToken, refreshToken, user });
+      res.status(200).json({ success: true, access_token, refresh_token, user });
     } catch (error) {
       res.status(404).json({ error: `Login failed: ${error}` });
       next(error);
@@ -142,24 +142,24 @@ export default class AuthController {
   }
 
   refreshAccessToken = (req, res) => {
-    const refreshToken = req.headers['refresh-token'];
+    const refresh_token = req.headers['refresh-token'];
 
-    if (!refreshToken) {
+    if (!refresh_token) {
       return res.status(401).json({ message: 'Refresh Token is required' });
     }
     try {
       const refreshPayload = jwt.verify(
-        refreshToken,
+        refresh_token,
         env.JWT_REFRESH_KEY
       )
-      const newAccessToken = tokenGenerator.generateAccessToken({ userId: refreshPayload.userId }, env.JWT_SECRET_KEY, env.JWT_EXPIRATION);
-      const newRefreshToken = tokenGenerator.generateRefreshToken({ userId: refreshPayload.userId }, env.JWT_REFRESH_KEY, env.JWT_REFRESH_EXPIRATION);
-      console.log(newAccessToken, newRefreshToken);
+      const new_access_token = tokenGenerator.generateAccessToken({ userId: refreshPayload.userId }, env.JWT_SECRET_KEY, env.JWT_EXPIRATION);
+      const new_refresh_token = tokenGenerator.generateRefreshToken({ userId: refreshPayload.userId }, env.JWT_REFRESH_KEY, env.JWT_REFRESH_EXPIRATION);
+      console.log(new_access_token, new_refresh_token);
 
       return res.status(200).send({
         success: true,
-        accessToken: newAccessToken,
-        refreshToken: newRefreshToken,
+        access_token: new_access_token,
+        refreshToken: new_refresh_token,
         message: 'New Access and Refresh Tokens generated successfully'
       });
 

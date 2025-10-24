@@ -1,15 +1,15 @@
 import jwt from 'jsonwebtoken';
 
-export default class tokenGenerator {
+export default class TokenGenerator {
   static generateAccessToken(userId, secretKey, expiresIn) {
-    const accessToken = jwt.sign(userId, secretKey, { expiresIn });
+    const access_token = jwt.sign(userId, secretKey, { expiresIn });
 
-    return accessToken;
+    return access_token;
   }
 
   static generateRefreshToken(userId, secretKey, expiresIn) {
-    const refreshToken = jwt.sign(userId, secretKey, { expiresIn });
+    const refresh_token = jwt.sign(userId, secretKey, { expiresIn });
 
-    return refreshToken;
+    return refresh_token;
   }
 }

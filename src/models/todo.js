@@ -27,6 +27,12 @@ const todoSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+
+    attachment: {
+      type: String,
+      default: null,
+    },
+
   },
   {
     timestamps: true,
