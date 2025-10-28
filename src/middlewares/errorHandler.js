@@ -1,7 +1,7 @@
 import { ValidationError } from "yup";
 //eslint-disable-next-line
 export default function errorHandler(err, req, res, next) {
-  console.log(err);
+  // console.log(err.statusCode);
 
   if (res.statusCode < 400) {
     res.status(500);
