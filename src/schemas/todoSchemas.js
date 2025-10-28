@@ -7,8 +7,8 @@ const tagSchema = yup.string()
   .strict(true);
 
 export const createTodoSchema = yup.object({
-  text: yup.string()
-    .trim()
+  title: yup.string()
+    // .trim()
     .min(3, 'must be at least 3 characters long.')
     .max(255, 'Max 255 characters.')
     .required('Task is required.'),
@@ -26,12 +26,15 @@ export const createTodoSchema = yup.object({
 
   tags: yup.array()
     .of(tagSchema)
-    .optional()
+    .optional(),
+
+  attachment: yup.mixed()
+    .nullable(),
 });
 
 export const updateTodoSchema = yup.object({
-  text: yup.string()
-    .trim()
+  title: yup.string()
+    // .trim()
     .min(3, 'must be at least 3 characters long.')
     .max(255, 'Task cannot exceed 255 characters.')
     .optional(),

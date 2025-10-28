@@ -2,7 +2,9 @@ import mongoose from 'mongoose';
 
 const todoSchema = new mongoose.Schema(
   {
-    text: {
+    userId: { type: mongoose.Types.ObjectId, ref: 'User' },
+
+    title: {
       type: String,
       required: [true, 'Please add a task description'],
       trim: true,
@@ -25,18 +27,15 @@ const todoSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+
+    attachment: {
+      type: String,
+      default: null,
+    },
+
   },
   {
     timestamps: true,
-    // toJSON: {
-    //   virtuals: true,
-    //   transform: (doc, ret) => {
-    //     ret.id = ret._id; // Map Mongoose's _id to 'id' 
-    //     delete ret._id;
-    //     delete ret.__v;
-    //   },
-    // },
-    // toObject: { virtuals: true },
   }
 );
 

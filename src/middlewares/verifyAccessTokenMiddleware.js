@@ -1,24 +1,27 @@
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-dotenv.config();
+import { env } from "../config/envConfig.js";
 
-
-export default function verifyToken(req, res, next) {
-  const secretKey = process.env.JWT_SECRET_KEY;
-
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-
-  console.log(token);
-  if (!token) {
-    return res.status(401).json({ success: false, error: 'Access denied' });
-  }
+export default async function verifyToken(req, res, next) {
   try {
-    const decoder = jwt.verify(token, secretKey);
-    req.userId = decoder.userId;
-    next();
+    const authHeader = req.headers.authorization;
+    const access_token = authHeader && authHeader.split(' ')[1];
+
+    if (!access_token) {
+      return res.status(401).json({
+        message: 'Access denied. Invalid authorization header.'
+      })
+    }
+
+    console.log(access_token);
+    const decoded = jwt.verify(access_token, env.JWT_SECRET_KEY);
+
+    req.user = decoded;
+    return next();
+
   } catch (error) {
-    res.status(401).json({ success: false, error: error.message }); //invalid token 
+    console.log(error);
+    res.status(401);
+    next(error)
   }
 }
 
