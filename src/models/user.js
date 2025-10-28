@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     verified: { type: Boolean, default: false },
     todos: { type: mongoose.Types.ObjectId, ref: 'Todo' },
-    profileImage: { type: String },
+    imagePath: { type: String },
   },
   {
     timestamps: true

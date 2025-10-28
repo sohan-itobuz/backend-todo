@@ -4,7 +4,7 @@ export default class ProfileController {
   profile = async (req, res, next) => {
     try {
       const userId = req.user.userId;
-      const userInfo = await user.findOne({ _id: userId });
+      const userInfo = await user.findById(userId);
 
       res.status(200).json({
         success: true,

@@ -10,6 +10,7 @@ import loggerMiddleware from './middlewares/logger.js'
 import otpRouter from './routes/otpRoutes.js'
 import errorHandler from './middlewares/errorHandler.js'
 import verifyToken from './middlewares/verifyAccessTokenMiddleware.js'
+import profileRouter from './routes/profileRoute.js'
 
 import { env } from './config/envConfig.js';
 
@@ -24,10 +25,11 @@ app.use(express.json())
 
 app.use(loggerMiddleware);
 
-app.use('/api/todos', verifyToken, router)
+app.use('/todos', verifyToken, router)
+app.use('/user/profile', verifyToken, profileRouter);
 app.use('/user/auth', authRoutes, otpRouter)
 app.use('/user/auth/protected', protectedRoute)
-// app.use('/user/profile', profileRouter);
+app.use('/imageDatabase/userUploads', express.static('imageDatabase/userUploads'));
 
 app.get('/', (req, res) => {
   res.json({
@@ -45,5 +47,5 @@ app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`)
-  console.log(`API endpoints available at http://localhost:${PORT}/api/todos`)
+  console.log(`API endpoints available at http://localhost:${PORT}/todos`)
 })
