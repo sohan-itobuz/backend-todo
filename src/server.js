@@ -27,6 +27,7 @@ app.use(loggerMiddleware);
 app.use('/api/todos', verifyToken, router)
 app.use('/user/auth', authRoutes, otpRouter)
 app.use('/user/auth/protected', protectedRoute)
+// app.use('/user/profile', profileRouter);
 
 app.get('/', (req, res) => {
   res.json({
